@@ -1,0 +1,69 @@
+{
+  "users": [
+    {
+      "email": "test1@gmail.com",
+      "password": "$2a$10$.Yw4t3v3IwR3dPm4rvAskOHwK1Clu7sLY.i.hxPRztsUF4U9fYN4S",
+      "name": "Test 1",
+      "teams": [
+        1,
+        2
+      ],
+      "id": 1
+    },
+    {
+      "email": "zubayerabm@gmail.com",
+      "password": "$2a$10$948oF/REIWNLh8lq4afJHuGByiTHYJ7gPqfnr5qDL8ixEq5GA0aym",
+      "name": "A B M Zubayer",
+      "teams": [],
+      "id": 2
+    }
+  ],
+  "teams": [
+    {
+      "id": 1,
+      "users": [
+        1
+      ],
+      "name": "Team 1",
+      "description": "nothing",
+      "date": "21 sep 2022"
+    },
+    {
+      "id": 2,
+      "users": [
+        1
+      ],
+      "name": "Team 2",
+      "description": "nothing",
+      "date": "21 sep 2022"
+    },
+    {
+      "name": "Design",
+      "description": "This is design team description",
+      "date": "21 sep 2022",
+      "users": [
+        3
+      ],
+      "id": 3
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "teamId": 1,
+      "projectName": "project 1",
+      "teamName": "team 1",
+      "description": "nothing",
+      "date": "21 sep 2022",
+      "avatar": "https://sample.com"
+    },
+    {
+      "id": 2,
+      "teamId": 1,
+      "projectName": "project 2",
+      "description": "nothing",
+      "date": "21 sep 2022",
+      "avatar": "https://sample.com"
+    }
+  ]
+}
