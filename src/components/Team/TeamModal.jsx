@@ -4,27 +4,30 @@ import { addModal } from "../../features/modal/modalSlice";
 import { useUpdateTeamMutation } from "../../features/teams/teamsApi";
 
 export default function TeamModal() {
-  const { data } = useSelector(state => state.modal)
-  const [name, setName] = useState(data?.name ?? '');
-  const [description, setDescription] = useState(data?.description ?? '');
-  const [color, setColor] = useState(data?.color ?? '');
+  const { data } = useSelector((state) => state.modal);
+  const [name, setName] = useState(data?.name ?? "");
+  const [description, setDescription] = useState(data?.description ?? "");
+  const [color, setColor] = useState(data?.color ?? "");
 
-  const [updateTeam, {isLoading, isError, error}] = useUpdateTeamMutation()
+  const [updateTeam] = useUpdateTeamMutation();
   const dispatch = useDispatch();
 
-  const handleSubmit = e => {
-    dispatch(updateTeam({teamId: data?.id, data: {
-      name,
-      description,
-      color,
-      date: new Date().toDateString()
-    }}));
+  const handleSubmit = (e) => {
+    updateTeam({
+      teamId: data?.id,
+      data: {
+        name,
+        description,
+        color,
+        date: new Date().toDateString(),
+      },
+    });
 
-    dispatch(addModal())
-  }
+    dispatch(addModal());
+  };
 
   return (
-    <div className="fixed top-0 right-0 left-0 bottom-0 z-20 cursor-default">
+    <div className="fixed top-20 right-20 left-20 bottom-20 z-20 cursor-default ">
       <div className="bg-white max-w-lg m-auto translate-y-10">
         <div className="flex justify-between p-4">
           <div>Team Modal</div>

@@ -12,7 +12,7 @@ export const teamsApi = apiSlice.injectEndpoints({
         } catch (error) {
           console.log(error);
         }
-      }
+      },
     }),
     createTeam: builder.mutation({
       query: (data) => ({
@@ -64,27 +64,34 @@ export const teamsApi = apiSlice.injectEndpoints({
         body: data,
       }),
 
-      async onQueryStarted(arg, {dispatch, queryFulfilled, getState}) {
-        const {user} = getState()?.auth
+      async onQueryStarted(arg, { dispatch, queryFulfilled, getState }) {
+        const { user } = getState()?.auth;
         try {
           const response = await queryFulfilled;
 
-          dispatch(apiSlice.util.updateQueryData("getTeams", user?.id, draft => {
-            const team = draft.find(t => t.id == arg.teamId);
+          dispatch(
+            apiSlice.util.updateQueryData("getTeams", user?.id, (draft) => {
+              const team = draft.find((t) => t.id == arg.teamId);
 
-            if (team?.id) {
-              team.name = response.data.name;
-              team.description = response.data.description;
-              team.date = response.data.date;
-            }
-          }))
+              if (team?.id) {
+                team.name = response.data.name;
+                team.color = response.data.color;
+                team.description = response.data.description;
+                team.date = response.data.date;
+              }
+            })
+          );
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
-      }
+      },
     }),
   }),
 });
 
-export const { useGetTeamsQuery, useAddUserMutation, useCreateTeamMutation, useUpdateTeamMutation } =
-  teamsApi;
+export const {
+  useGetTeamsQuery,
+  useAddUserMutation,
+  useCreateTeamMutation,
+  useUpdateTeamMutation,
+} = teamsApi;

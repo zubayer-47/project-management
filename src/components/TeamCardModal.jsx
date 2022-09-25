@@ -4,9 +4,9 @@ import { addModal, setModalData } from "../features/modal/modalSlice";
 import TeamModal from "./Team/TeamModal";
 
 export default function TeamCardModal({ handleAdd, team }) {
-  const {isAddModal} = useSelector(state => state.modal)
+  const { isAddModal } = useSelector((state) => state.modal);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -17,10 +17,13 @@ export default function TeamCardModal({ handleAdd, team }) {
         >
           Add User
         </li>
-        <li className="text-sm px-7 py-1" onClick={() => {
-          dispatch(addModal())
-          dispatch(setModalData(team))
-        }}>
+        <li
+          className="text-sm px-7 py-1"
+          onClick={() => {
+            dispatch(addModal());
+            dispatch(setModalData(team));
+          }}
+        >
           Edit Team
         </li>
       </ul>

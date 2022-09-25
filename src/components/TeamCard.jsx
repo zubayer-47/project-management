@@ -3,13 +3,23 @@ import { useDispatch } from "react-redux";
 import { setCardModal } from "../features/modal/modalSlice";
 import TeamCardModal from "./TeamCardModal";
 
+const colors = {
+  purple: `text-purple-500 bg-purple-100`,
+  red: `text-red-500 bg-red-100`,
+  indigo: `text-indigo-500 bg-indigo-100`,
+  orange: `text-orange-500 bg-orange-100`,
+  amber: `text-amber-500 bg-amber-100`,
+  green: `text-green-500 bg-green-100`,
+  lime: `text-lime-500 bg-lime-100`,
+};
+
 export default function TeamCard({ team, onClick, open, setModalOpen }) {
   const { name, description, date, color } = team ?? {};
 
   const dispatch = useDispatch();
+  
+  const generatedColor = colors[color];
 
-  const textColor = color?.length && `text-${color}-300`;
-  const bgColor = color?.length && `bg-${color}-500`
 
   return (
     <div
@@ -18,7 +28,7 @@ export default function TeamCard({ team, onClick, open, setModalOpen }) {
     >
       {open && (
         <TeamCardModal
-        team={team}
+          team={team}
           handleAdd={() => {
             setModalOpen(false);
             dispatch(setCardModal());
@@ -39,7 +49,7 @@ export default function TeamCard({ team, onClick, open, setModalOpen }) {
         </svg>
       </button>
       <span
-        className={`flex items-center h-6 px-3 text-xs font-semibold ${textColor} ${bgColor} rounded-full`}
+        className={`flex items-center h-6 px-3 text-xs font-semibold ${generatedColor} rounded-full`}
       >
         {name}
       </span>

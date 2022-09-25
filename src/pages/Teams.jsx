@@ -85,7 +85,7 @@ export default function Teams() {
         <span className="ml-1 text-sm leading-none">Learn with Sumit</span>
       </a>
       {isAddModal && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 bg-slate-400/[.4] z-10 select-none"></div>
+        <div className="fixed top-0 left-0 right-0 bottom-0 bg-slate-400/[.5] z-10 select-none"></div>
       )}
     </div>
   );
