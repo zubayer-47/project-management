@@ -1,12 +1,27 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addModal } from "../../features/modal/modalSlice";
+import { useUpdateTeamMutation } from "../../features/teams/teamsApi";
 
 export default function TeamModal() {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [color, setColor] = useState("");
+  const { data } = useSelector(state => state.modal)
+  const [name, setName] = useState(data?.name ?? '');
+  const [description, setDescription] = useState(data?.description ?? '');
+  const [color, setColor] = useState(data?.color ?? '');
+
+  const [updateTeam, {isLoading, isError, error}] = useUpdateTeamMutation()
   const dispatch = useDispatch();
+
+  const handleSubmit = e => {
+    dispatch(updateTeam({teamId: data?.id, data: {
+      name,
+      description,
+      color,
+      date: new Date().toDateString()
+    }}));
+
+    dispatch(addModal())
+  }
 
   return (
     <div className="fixed top-0 right-0 left-0 bottom-0 z-20 cursor-default">
@@ -93,7 +108,7 @@ export default function TeamModal() {
         </div>
 
         <button
-          onClick={() => console.log(color, name)}
+          onClick={handleSubmit}
           className="bg-indigo-500 text-white px-4 py-2 rounded-md ml-4 mb-5"
         >
           Submit

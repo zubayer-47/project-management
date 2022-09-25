@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isAddModal: false,
   cardModal: true,
+  data: {}
 };
 
 export const modalSlice = createSlice({
@@ -15,8 +16,11 @@ export const modalSlice = createSlice({
     setCardModal(state) {
       state.cardModal = !state.cardModal;
     },
+    setModalData(state, action) {
+      state.data = action.payload;
+    }
   },
 });
 
 export default modalSlice.reducer;
-export const {addModal,setCardModal} = modalSlice.actions
+export const {addModal,setCardModal, setModalData} = modalSlice.actions

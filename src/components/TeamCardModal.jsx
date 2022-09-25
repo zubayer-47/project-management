@@ -1,9 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addModal } from "../features/modal/modalSlice";
+import { addModal, setModalData } from "../features/modal/modalSlice";
 import TeamModal from "./Team/TeamModal";
 
-export default function TeamCardModal({ handleAdd }) {
+export default function TeamCardModal({ handleAdd, team }) {
   const {isAddModal} = useSelector(state => state.modal)
 
   const dispatch = useDispatch()
@@ -19,6 +19,7 @@ export default function TeamCardModal({ handleAdd }) {
         </li>
         <li className="text-sm px-7 py-1" onClick={() => {
           dispatch(addModal())
+          dispatch(setModalData(team))
         }}>
           Edit Team
         </li>

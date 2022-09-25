@@ -8,6 +8,9 @@ export default function TeamCard({ team, onClick, open, setModalOpen }) {
 
   const dispatch = useDispatch();
 
+  const textColor = color?.length && `text-${color}-300`;
+  const bgColor = color?.length && `bg-${color}-500`
+
   return (
     <div
       className="relative flex flex-col items-start p-4 mt-3 bg-white rounded-lg cursor-pointer bg-opacity-90 group hover:bg-opacity-100"
@@ -15,8 +18,9 @@ export default function TeamCard({ team, onClick, open, setModalOpen }) {
     >
       {open && (
         <TeamCardModal
+        team={team}
           handleAdd={() => {
-            setModalOpen(false)
+            setModalOpen(false);
             dispatch(setCardModal());
           }}
         />
@@ -34,7 +38,9 @@ export default function TeamCard({ team, onClick, open, setModalOpen }) {
           <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
         </svg>
       </button>
-      <span className="flex items-center h-6 px-3 text-xs font-semibold text-pink-500 bg-pink-100 rounded-full">
+      <span
+        className={`flex items-center h-6 px-3 text-xs font-semibold ${textColor} ${bgColor} rounded-full`}
+      >
         {name}
       </span>
       <h4 className="mt-3 text-sm font-medium">{description}</h4>
