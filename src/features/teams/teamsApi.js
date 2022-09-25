@@ -48,11 +48,14 @@ export const teamsApi = apiSlice.injectEndpoints({
       },
     }),
     addUser: builder.mutation({
-      query: ({ userId, teamId }) => ({
-        url: `/teams?id=${teamId}`,
-        method: "PATCH",
-        // body:
-      }),
+      query: ({ teamId, user }) => {
+
+        // return {
+        //   url: `/teams?id=${teamId}`,
+        //   method: "PATCH",
+        //   // body:
+        // }
+      },
     }),
   }),
 });
