@@ -18,7 +18,7 @@ export default function Teams() {
   const dispatch = useDispatch();
 
   const handleTeamAdd = (e) => {
-    dispatch(addModal());
+    dispatch(addModal(true));
   };
 
   let content = null;
@@ -38,7 +38,7 @@ export default function Teams() {
           );
         }}
         open={modalId === team?.id && cardModalOpen}
-        setModalOpen={setCardModalOpen}
+        setOpen={setCardModalOpen}
       />
     ));
   }
@@ -84,9 +84,6 @@ export default function Teams() {
         </div>
         <span className="ml-1 text-sm leading-none">Learn with Sumit</span>
       </a>
-      {isAddModal && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 bg-slate-400/[.5] z-10 select-none"></div>
-      )}
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isAddModal: false,
-  cardModal: true,
+  cardModal: false,
   data: {}
 };
 
@@ -10,8 +10,8 @@ export const modalSlice = createSlice({
   name: "modal",
   initialState,
   reducers: {
-    addModal(state) {
-      state.isAddModal = !state.isAddModal;
+    addModal(state, action) {
+      state.isAddModal = action.payload;
     },
     setCardModal(state) {
       state.cardModal = !state.cardModal;

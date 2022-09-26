@@ -1,10 +1,9 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addModal, setModalData } from "../features/modal/modalSlice";
-import TeamModal from "./Team/TeamModal";
+import { useDispatch } from "react-redux";
+import { addModal, setCardModal, setModalData } from "../features/modal/modalSlice";
+import { getTeam } from "../features/teams/teamSlice";
 
-export default function TeamCardModal({ handleAdd, team }) {
-  const { isAddModal } = useSelector((state) => state.modal);
+export default function TeamCardModal({ setOpen, team }) {
 
   const dispatch = useDispatch();
 
@@ -13,23 +12,25 @@ export default function TeamCardModal({ handleAdd, team }) {
       <ul className="absolute right-7 top-8 bg-slate-200 shadow-md text-center z-10">
         <li
           className="text-sm border-b border-b-slate-100 px-7 py-1"
-          onClick={handleAdd}
+          onClick={() => {
+            setOpen(false)
+            dispatch(setCardModal())
+            dispatch(getTeam(team))
+          }}
         >
           Add User
         </li>
         <li
           className="text-sm px-7 py-1"
           onClick={() => {
-            dispatch(addModal());
+            dispatch(addModal(true));
             dispatch(setModalData(team));
+            setOpen(false)
           }}
         >
           Edit Team
         </li>
       </ul>
-
-      {/* modals */}
-      {isAddModal && <TeamModal />}
     </>
   );
 }

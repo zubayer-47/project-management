@@ -21,7 +21,6 @@ export const apiSlice = createApi({
 
       if (result?.error?.status === 401) {
         api.dispatch(logout());
-        console.log("clearing");
         localStorage.clear();
       } else {
         return result;

@@ -1,61 +1,62 @@
 import { apiSlice } from "../api/apiSlice";
-import { getTeams } from "./teamSlice";
 
 export const teamsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getTeams: builder.query({
       query: (userId) => `/teams?users_like=${userId}`,
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(getTeams(data));
-        } catch (error) {
-          console.log(error);
-        }
-      },
     }),
     createTeam: builder.mutation({
-      query: (data) => ({
+      query: ({ userId, data }) => ({
         url: "/teams",
         method: "POST",
-        body: data,
+        body: {
+          ...data,
+          users: [userId],
+        },
       }),
-      async onCacheEntryAdded(
-        arg,
-        { cacheDataLoaded, cacheEntryRemoved, dispatch }
-      ) {
-        const patchResult = dispatch(
-          apiSlice.util.updateQueryData(
-            "getTeams",
-            arg.data.userId,
-            (draftTeams) => {
+      async onQueryStarted({ userId, data }, { queryFulfilled, dispatch }) {
+        try {
+          const response = await queryFulfilled;
+          dispatch(
+            apiSlice.util.updateQueryData("getTeams", userId, (draftTeams) => {
               const index = draftTeams.findIndex(
-                (team) => team.id === arg.data.userId
+                (team) => team.id != data.userId
               );
 
               if (index !== -1) {
-                draftTeams.push(arg.data);
+                draftTeams.push(response.data);
               }
-            }
-          )
-        );
-
-        try {
-          await cacheDataLoaded;
-        } catch (error) {
-          patchResult.undo();
-        }
+            })
+          );
+        } catch (error) {}
       },
     }),
-    // addUser: builder.mutation({
-    //   query: ({ teamId, user }) => {
-    //     // return {
-    //     //   url: `/teams?id=${teamId}`,
-    //     //   method: "PATCH",
-    //     //   // body:
-    //     // }
-    //   },
-    // }),
+    addUser: builder.mutation({
+      query: ({ teamId, users }) => {
+        return {
+          url: `/teams/${teamId}`,
+          method: "PATCH",
+          body: { users },
+        };
+      },
+
+      async onQueryStarted(arg, { queryFulfilled }) {
+        const response = await queryFulfilled;
+        console.log(response);
+      },
+    }),
+
+    addTeamToUser: builder.mutation({
+      query: ({ teams, userId }) => ({
+        url: `/users/${userId}`,
+        method: "PATCH",
+        body: { teams },
+      }),
+    }),
+
+    checkUserExist: builder.query({
+      query: (email) => `/users?email_like=${email}`,
+    }),
 
     updateTeam: builder.mutation({
       query: ({ teamId, data }) => ({
@@ -94,4 +95,6 @@ export const {
   useAddUserMutation,
   useCreateTeamMutation,
   useUpdateTeamMutation,
+  useCheckUserExistQuery,
+  useAddTeamToUserMutation
 } = teamsApi;

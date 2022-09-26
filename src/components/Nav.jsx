@@ -1,9 +1,13 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
+import { logout } from "../features/auth/authSlice";
 
 export default function Nav({ page = "" }) {
+  const dispatch = useDispatch();
+
   return (
     <div className="flex items-center flex-shrink-0 w-full h-16 px-10 bg-white bg-opacity-75">
       <img src={logo} className="h-10 w-10" />
@@ -28,7 +32,13 @@ export default function Nav({ page = "" }) {
           Team
         </Link>
       </div>
-      <button className="flex items-center justify-center w-8 h-8 ml-auto overflow-hidden rounded-full cursor-pointer">
+      <button
+        className="flex items-center justify-center w-8 h-8 ml-auto overflow-hidden rounded-full cursor-pointer"
+        onClick={() => {
+          dispatch(logout());
+          localStorage.clear();
+        }}
+      >
         <img
           src="https://assets.codepen.io/5041378/internal/avatars/users/default.png?fit=crop&format=auto&height=512&version=1600304177&width=512"
           alt=""
