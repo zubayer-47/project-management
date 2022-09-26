@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCardModal } from "../features/modal/modalSlice";
-import { teamsApi, useAddTeamToUserMutation, useAddUserMutation } from "../features/teams/teamsApi";
+import {
+  teamsApi,
+  useAddTeamToUserMutation,
+  useAddUserMutation
+} from "../features/teams/teamsApi";
 import debounce from "../utils/debounce";
 
 export default function AddUserModal() {
@@ -21,11 +25,17 @@ export default function AddUserModal() {
         const response = await dispatch(
           teamsApi.endpoints.checkUserExist.initiate(email)
         );
-        setUsers(response?.data);
-        console.log(response);
+
+        const data = response?.data?.filter(
+          (user) => team?.users?.includes(user?.id) === false
+        );
+
+        console.log(data);
+
+        setUsers(data);
       }
     })();
-  }, [email, dispatch]);
+  }, [email, dispatch, team]);
 
   const control = (e) => {
     console.log("control");
@@ -43,30 +53,27 @@ export default function AddUserModal() {
           onChange={handleCheck}
         />
 
-        <div className="h-10 overflow-y-scroll" hidden={!users?.length}>
+        <div className="h-10 overflow-y-scroll" hidden={users.length === 0}>
           {users?.length > 0 &&
-            users.map(
-              (user) =>
-                team?.users?.includes(user?.id) === false && (
-                  <p
-                    key={user?.id}
-                    className="text-sm border-b p-2"
-                    onClick={(e) => {
-                      addUser({
-                        teamId: team?.id,
-                        users: [...team?.users, user?.id],
-                      });
-                      addTeamToUser({
-                        userId: user?.id,
-                        teams: [...user?.teams, team?.id]
-                      })
-                      dispatch(setCardModal());
-                    }}
-                  >
-                    {user?.email}
-                  </p>
-                )
-            )}
+            users.map((user) => (
+              <p
+                key={user?.id}
+                className="text-sm border-b p-2"
+                onClick={(e) => {
+                  addUser({
+                    teamId: team?.id,
+                    users: [...team?.users, user?.id],
+                  });
+                  addTeamToUser({
+                    userId: user?.id,
+                    teams: [...user?.teams, team?.id],
+                  });
+                  dispatch(setCardModal());
+                }}
+              >
+                {user?.email}
+              </p>
+            ))}
         </div>
       </div>
     </div>

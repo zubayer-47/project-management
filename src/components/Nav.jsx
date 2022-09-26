@@ -10,7 +10,7 @@ export default function Nav({ page = "" }) {
 
   return (
     <div className="flex items-center flex-shrink-0 w-full h-16 px-10 bg-white bg-opacity-75">
-      <img src={logo} className="h-10 w-10" />
+      <img src={logo} className="h-10 w-10" alt="Logo" />
       {page === "projects" && (
         <input
           className="flex items-center h-10 px-4 ml-10 text-sm bg-gray-200 rounded-full focus:outline-none focus:ring"
