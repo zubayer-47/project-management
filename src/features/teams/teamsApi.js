@@ -6,10 +6,10 @@ export const teamsApi = apiSlice.injectEndpoints({
       query: (userId) => `/teams?users_like=${userId}`,
     }),
     getTeam: builder.query({
-      query: (teamName) => `/teams?name=${teamName}`
+      query: (teamName) => `/teams?name=${teamName}`,
     }),
     getTeamById: builder.query({
-      query: (id) => `/teams/${id}`
+      query: (id) => `/teams/${id}`,
     }),
     createTeam: builder.mutation({
       query: ({ userId, data }) => ({
@@ -25,13 +25,7 @@ export const teamsApi = apiSlice.injectEndpoints({
           const response = await queryFulfilled;
           dispatch(
             apiSlice.util.updateQueryData("getTeams", userId, (draftTeams) => {
-              const index = draftTeams.findIndex(
-                (team) => team.id != data.userId
-              );
-// modify
-              if (index !== -1) {
-                draftTeams.push(response.data);
-              }
+              draftTeams.push(response.data);
             })
           );
         } catch (error) {}
