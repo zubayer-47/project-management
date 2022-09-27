@@ -6,18 +6,11 @@ import {
   useAddTeamToUserMutation,
   useUpdateTeamMutation
 } from "../features/teams/teamsApi";
-import debounce from "../utils/debounce";
 
 export default function Modal() {
-  const {
-    data,
-    isTeamModalOpen: open,
-    isProjectEmpty,
-  } = useSelector((state) => state.modal);
+  const { data, isTeamModalOpen: open } = useSelector((state) => state.modal);
   const { user } = useSelector((state) => state.auth);
   const [name, setName] = useState(data?.name || "");
-  const [teamName, setTeamName] = useState("");
-  const [teams, setTeams] = useState([]);
   const [description, setDescription] = useState(data?.description || "");
   const [color, setColor] = useState(data?.color || "");
 
@@ -84,7 +77,8 @@ export default function Modal() {
                   type="text"
                   className="rounded-md focus:outline-none focus:ring border-2 px-2 py-1"
                   id="name"
-                  onChange={debounce((e) => setTeamName(e.target.value))}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
               {/* Description Section */}
