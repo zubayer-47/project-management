@@ -2,17 +2,18 @@
   "users": [
     {
       "email": "test1@gmail.com",
-      "password": "$2a$10$.Yw4t3v3IwR3dPm4rvAskOHwK1Clu7sLY.i.hxPRztsUF4U9fYN4S",
+      "password": "$2a$10$948oF/REIWNLh8lq4afJHuGByiTHYJ7gPqfnr5qDL8ixEq5GA0aym",
       "name": "Test 1",
       "teams": [
         1,
-        2
+        2,
+        12
       ],
       "id": 1
     },
     {
       "email": "test2@gmail.com",
-      "password": "$2a$10$.Yw4t3v3IwR3dPm4rvAskOHwK1Clu7sLY.i.hxPRztsUF4U9fYN4S",
+      "password": "$2a$10$948oF/REIWNLh8lq4afJHuGByiTHYJ7gPqfnr5qDL8ixEq5GA0aym",
       "name": "Test 2",
       "teams": [
         1
@@ -21,7 +22,7 @@
     },
     {
       "email": "test3@gmail.com",
-      "password": "$2a$10$.Yw4t3v3IwR3dPm4rvAskOHwK1Clu7sLY.i.hxPRztsUF4U9fYN4S",
+      "password": "$2a$10$948oF/REIWNLh8lq4afJHuGByiTHYJ7gPqfnr5qDL8ixEq5GA0aym",
       "name": "Test 3",
       "teams": [],
       "id": 3
@@ -30,7 +31,11 @@
       "email": "zubayerabm@gmail.com",
       "password": "$2a$10$948oF/REIWNLh8lq4afJHuGByiTHYJ7gPqfnr5qDL8ixEq5GA0aym",
       "name": "A B M Zubayer",
-      "teams": [],
+      "teams": [
+        3,
+        4,
+        1
+      ],
       "id": 4
     }
   ],
@@ -40,7 +45,8 @@
       "users": [
         1,
         2,
-        3
+        3,
+        4
       ],
       "name": "Hii",
       "description": "This is Development",
@@ -156,7 +162,8 @@
       "color": "orange",
       "date": "Mon Sep 26 2022",
       "users": [
-        4
+        4,
+        1
       ],
       "id": 12
     },
@@ -189,25 +196,46 @@
         4
       ],
       "id": 15
+    },
+    {
+      "name": "Welcome",
+      "description": "Welcome",
+      "color": "lime",
+      "date": "Mon Sep 26 2022",
+      "users": [
+        4
+      ],
+      "id": 16
     }
   ],
   "projects": [
     {
-      "id": 1,
-      "teamId": 1,
-      "projectName": "project 1",
-      "teamName": "team 1",
-      "description": "nothing",
-      "date": "21 sep 2022",
-      "avatar": "https://sample.com"
+      "teamId": 3,
+      "name": "dswed",
+      "members": [
+        4
+      ],
+      "teamName": "Design Team",
+      "color": "green",
+      "description": "sdaws",
+      "stage": "backlog",
+      "date": "Tue Sep 27 2022",
+      "id": 5,
+      "creator": 4
     },
     {
-      "id": 2,
-      "teamId": 1,
-      "projectName": "project 2",
-      "description": "nothing",
-      "date": "21 sep 2022",
-      "avatar": "https://sample.com"
+      "teamId": 3,
+      "name": "asd",
+      "members": [
+        4
+      ],
+      "teamName": "Design Team",
+      "color": "green",
+      "description": "asda",
+      "stage": "backlog",
+      "creator": 4,
+      "date": "Tue Sep 27 2022",
+      "id": 6
     }
   ]
 }
