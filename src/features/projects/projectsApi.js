@@ -3,28 +3,24 @@ import { apiSlice } from "../api/apiSlice";
 export const projectApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProjectsByStage: builder.query({
-      query: ({ stage, userId }) =>
-        `/projects?stage=${stage}&members_like=${userId}`,
+      query: ({ stage }) => `/projects?stage=${stage}`,
     }),
 
     createProject: builder.mutation({
-      query: ({ userId, data }) => ({
+      query: (data) => ({
         url: "/projects",
         method: "POST",
         body: data,
       }),
 
-      async onQueryStarted(
-        { stage, userId, data },
-        { queryFulfilled, dispatch }
-      ) {
+      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
           const response = await queryFulfilled;
 
           dispatch(
             apiSlice.util.updateQueryData(
               "getProjectsByStage",
-              { stage: data.stage, userId },
+              { stage: "backlog" },
               (draft) => {
                 draft.push(response.data);
               }
@@ -41,17 +37,12 @@ export const projectApi = apiSlice.injectEndpoints({
         body: data,
       }),
 
-      async onQueryStarted(
-        { projectId, data },
-        { queryFulfilled, dispatch, getState }
-      ) {
-        const { user } = getState()?.auth;
+      async onQueryStarted({ projectId, data }, { queryFulfilled, dispatch }) {
         const patchResult = dispatch(
           apiSlice.util.updateQueryData(
             "getProjectsByStage",
             {
               stage: "backlog",
-              userId: user.id,
             },
             (draft) => {
               const oldProject = draft.find(
@@ -76,19 +67,15 @@ export const projectApi = apiSlice.injectEndpoints({
     }),
 
     deleteProject: builder.mutation({
-      query: ({ projectId, creator }) => ({
+      query: (projectId) => ({
         url: `/projects/${projectId}`,
         method: "DELETE",
       }),
 
-      async onQueryStarted(
-        { projectId, creator },
-        { queryFulfilled, dispatch }
-      ) {
+      async onQueryStarted(projectId, { queryFulfilled, dispatch }) {
         const patchResult = dispatch(
           apiSlice.util.updateQueryData("getProjectsByStage", {
             stage: "backlog",
-            userId: creator,
           }),
           (draft) => {
             return draft.filter((p) => {

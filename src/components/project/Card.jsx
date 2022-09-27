@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addProject,
@@ -32,14 +32,25 @@ export default function Card({
   setOpen,
   onClick,
 }) {
+  const [isSearchMatch, setIsSearchMatch] = useState(false);
+  const { searchTerm } = useSelector((state) => state.search);
   const dispatch = useDispatch();
   const { cardModal } = useSelector((state) => state.modal);
   const { user } = useSelector((state) => state.auth);
 
+  useEffect(() => {
+    if (description.includes(searchTerm) && searchTerm.length > 0) {
+      setIsSearchMatch(true);
+    } else {
+      setIsSearchMatch(false);
+    }
+  }, [description, searchTerm]);
   return (
     <>
       <div
-        className="relative flex flex-col items-start p-4 mt-1 bg-white rounded-lg cursor-pointer bg-opacity-90 group hover:bg-opacity-100"
+        className={`relative flex flex-col items-start p-4 mt-1 bg-white ${
+          isSearchMatch ? "ring-4" : "ring-0"
+        } rounded-lg cursor-pointer bg-opacity-90 group hover:bg-opacity-100 m-2`}
         draggable="true"
       >
         {open && (
@@ -60,10 +71,7 @@ export default function Card({
             handleThird={() => {
               if (project?.creator === user?.id) {
                 dispatch(
-                  projectApi.endpoints.deleteProject.initiate({
-                    projectId: project.id,
-                    creator: project.creator,
-                  })
+                  projectApi.endpoints.deleteProject.initiate(project.id)
                 );
                 dispatch(addProjectModal(false));
                 setOpen(false);
