@@ -1,8 +1,13 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import AddUserModal from "./AddUserModal";
-import Modal from "./Modal";
-import TeamCardModal from "./TeamCardModal";
+import {
+  addTeamModal,
+  setCardModal,
+  setModalData
+} from "../../features/modal/modalSlice";
+import { getTeam } from "../../features/teams/teamSlice";
+import CardModal from "../CardModal";
+import AddUserModal from "../Team/AddUserModal";
 
 const colors = {
   purple: `text-purple-500 bg-purple-100`,
@@ -17,8 +22,7 @@ const colors = {
 export default function TeamCard({ team, onClick, open, setOpen }) {
   const { name, description, date, color } = team ?? {};
 
-  const { isAddModal, cardModal } = useSelector((state) => state.modal);
-
+  const { cardModal } = useSelector((state) => state.modal);
   const dispatch = useDispatch();
 
   const generatedColor = colors[color];
@@ -29,7 +33,22 @@ export default function TeamCard({ team, onClick, open, setOpen }) {
         className="relative flex flex-col items-start p-4 mt-3 bg-white rounded-lg cursor-pointer bg-opacity-90 group hover:bg-opacity-100"
         draggable="true"
       >
-        {open && <TeamCardModal team={team} setOpen={setOpen} />}
+        {open && (
+          <CardModal
+            handleFirst={() => {
+              setOpen(false);
+              dispatch(setCardModal());
+              dispatch(getTeam(team));
+            }}
+            handleSecond={() => {
+              dispatch(addTeamModal(true));
+              dispatch(setModalData(team));
+              setOpen(false);
+            }}
+            firstTitle="Add User"
+            secondTitle="Edit Team"
+          />
+        )}
         <button
           onClick={onClick}
           className="absolute top-0 right-0 items-center justify-center hidden w-5 h-5 mt-3 mr-2 text-gray-500 rounded hover:bg-gray-200 hover:text-gray-700 group-hover:flex"
@@ -67,9 +86,7 @@ export default function TeamCard({ team, onClick, open, setOpen }) {
           </div>
         </div>
       </div>
-
       {cardModal && <AddUserModal />}
-      {isAddModal && <Modal open={isAddModal} />}
     </>
   );
 }

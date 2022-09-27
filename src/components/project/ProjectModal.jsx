@@ -1,66 +1,77 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addTeamModal } from "../features/modal/modalSlice";
-import {
-  teamsApi,
-  useAddTeamToUserMutation,
-  useUpdateTeamMutation
-} from "../features/teams/teamsApi";
-import debounce from "../utils/debounce";
+import { addProjectModal } from "../../features/modal/modalSlice";
+import { useCreateProjectMutation, useUpdateProjectMutation } from "../../features/projects/projectsApi";
+import { teamsApi } from "../../features/teams/teamsApi";
+import debounce from "../../utils/debounce";
 
-export default function Modal() {
+export default function ProjectModal() {
   const {
-    data,
-    isTeamModalOpen: open,
+    isProjectModalOpen: open,
+    project,
     isProjectEmpty,
   } = useSelector((state) => state.modal);
   const { user } = useSelector((state) => state.auth);
-  const [name, setName] = useState(data?.name || "");
-  const [teamName, setTeamName] = useState("");
+  const [projectName, setProjectName] = useState(project?.name || "");
+  const [teamName, setTeamName] = useState(project?.teamName || "");
+  const [description, setDescription] = useState(project?.description || "");
+  const [color, setColor] = useState(project?.color || "");
+  const [teamId, setTeamId] = useState('');
   const [teams, setTeams] = useState([]);
-  const [description, setDescription] = useState(data?.description || "");
-  const [color, setColor] = useState(data?.color || "");
 
-  const [updateTeam] = useUpdateTeamMutation();
-  const [addTeamToUser] = useAddTeamToUserMutation();
+  const [updateProject] = useUpdateProjectMutation();
+  const [createProject] = useCreateProjectMutation()
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await dispatch(
+          teamsApi.endpoints.getTeam.initiate(teamName)
+        );
+
+        setTeams(response.data);
+      } catch (error) {}
+    })();
+  }, [teamName, dispatch]);
+
   const control = () => {
-    dispatch(addTeamModal(false));
+    dispatch(addProjectModal(false));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (data?.id) {
-      updateTeam({
-        teamId: data?.id,
+    if (project?.id) {
+      // update project
+      updateProject({
+        projectId: project?.id,
+        userId: user?.id,
         data: {
-          name,
-          description,
+          teamId: project?.teamId,
+          name: projectName,
           color,
+          description,
           date: new Date().toDateString(),
         },
       });
-    } else if (!data?.id) {
-      const response = await dispatch(
-        teamsApi.endpoints.createTeam.initiate({
-          userId: user?.id,
-          data: {
-            name,
-            description,
-            color,
-            date: new Date().toDateString(),
-          },
-        })
-      );
+    } else if (!project?.id) {
+      //   create project
+      
+      // if (teamId) {
+      //   createProject({
+      //     userId: user?.id,
+      //     data: {
+      //       teamId,
+      //       name: projectName,
+      //       members: [user?.id],
+      //       teamName: 
+      //     }
+      //   })
+      // }
 
-      addTeamToUser({
-        userId: user?.id,
-        teams: [...user?.teams, response?.data?.id],
-      });
     }
 
-    dispatch(addTeamModal(false));
+    dispatch(addProjectModal(false));
   };
 
   return (
@@ -77,16 +88,42 @@ export default function Modal() {
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="rounded-md shadow-sm -space-y-px">
               {/* Team Name Section */}
-
+              {isProjectEmpty && (
+                <>
+                  <div className="flex items-left flex-col pl-4 pr-4 gap-1 mb-3">
+                    <label htmlFor="name">Team Name</label>
+                    <input
+                      type="text"
+                      className="rounded-md focus:outline-none focus:ring border-2 px-2 py-1"
+                      id="name"
+                      onChange={debounce((e) => setTeamName(e.target.value))}
+                    />
+                  </div>
+                  <div className="ml-5 pb-5">
+                    {teams?.length > 0 &&
+                      teams.map((t) => (
+                        <p
+                          key={t.id}
+                          className="border-2 p-2 w-3/4"
+                          onClick={(e) => setTeamId(t.id)}
+                        >
+                          {t.name}
+                        </p>
+                      ))}
+                  </div>
+                </>
+              )}
               <div className="flex items-left flex-col pl-4 pr-4 gap-1 mb-3">
-                <label htmlFor="name">Team Name</label>
+                <label htmlFor="name">Project Name</label>
                 <input
                   type="text"
                   className="rounded-md focus:outline-none focus:ring border-2 px-2 py-1"
                   id="name"
-                  onChange={debounce((e) => setTeamName(e.target.value))}
+                  value={projectName}
+                  onChange={(e) => setProjectName(e.target.value)}
                 />
               </div>
+
               {/* Description Section */}
               <div className="flex items-left flex-col pl-4 pr-4 gap-1 mb-3">
                 <label htmlFor="description">Description</label>

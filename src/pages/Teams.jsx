@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import logo from "../assets/logo.png";
 import Nav from "../components/Nav";
-import TeamCard from "../components/TeamCard";
+import TeamCard from "../components/Team/TeamCard";
 import Error from "../components/ui/Error";
-import { addModal } from "../features/modal/modalSlice";
+import { addTeamModal } from "../features/modal/modalSlice";
 import { useGetTeamsQuery } from "../features/teams/teamsApi";
 
 export default function Teams() {
@@ -13,12 +13,10 @@ export default function Teams() {
   const [modalId, setModalId] = useState("");
   const [cardModalOpen, setCardModalOpen] = useState(false);
 
-  const { isAddModal } = useSelector((state) => state.modal);
-
   const dispatch = useDispatch();
 
   const handleTeamAdd = (e) => {
-    dispatch(addModal(true));
+    dispatch(addTeamModal(true));
   };
 
   let content = null;

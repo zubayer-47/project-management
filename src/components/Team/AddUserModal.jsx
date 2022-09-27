@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addModal, setCardModal } from "../features/modal/modalSlice";
+import { addTeamModal, setCardModal } from "../../features/modal/modalSlice";
 import {
   teamsApi,
   useAddTeamToUserMutation,
   useAddUserMutation
-} from "../features/teams/teamsApi";
-import debounce from "../utils/debounce";
+} from "../../features/teams/teamsApi";
+import debounce from "../../utils/debounce";
 
 export default function AddUserModal() {
   const [email, setEmail] = useState("");
@@ -18,7 +18,7 @@ export default function AddUserModal() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(addModal(false));
+    dispatch(addTeamModal(false));
   }, [dispatch]);
 
   const handleCheck = debounce((e) => setEmail(e.target.value));
