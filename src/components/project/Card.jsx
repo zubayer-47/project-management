@@ -35,7 +35,7 @@ export default function Card({
   const dispatch = useDispatch();
   const { cardModal } = useSelector((state) => state.modal);
   const { user } = useSelector((state) => state.auth);
-  
+
   return (
     <>
       <div
@@ -59,14 +59,14 @@ export default function Card({
             thirdTitle="Delete"
             handleThird={() => {
               if (project?.creator === user?.id) {
-                dispatch(addProjectModal(false));
-                setOpen(false);
                 dispatch(
                   projectApi.endpoints.deleteProject.initiate({
                     projectId: project.id,
                     creator: project.creator,
                   })
                 );
+                dispatch(addProjectModal(false));
+                setOpen(false);
                 dispatch(emptyProject());
               }
             }}
