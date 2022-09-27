@@ -34,16 +34,16 @@ export default function Nav({ page = "" }) {
       </div>
       <button
         className="flex items-center justify-center w-8 h-8 ml-auto overflow-hidden rounded-full cursor-pointer"
-        onClick={() => {
-          dispatch(logout());
-          localStorage.clear();
-        }}
       >
         <img
           src="https://assets.codepen.io/5041378/internal/avatars/users/default.png?fit=crop&format=auto&height=512&version=1600304177&width=512"
           alt=""
         />
       </button>
+      <button className="ring px-3 py-1 rounded ml-5" onClick={() => {
+          dispatch(logout());
+          localStorage.clear();
+        }}>Log Out</button>
     </div>
   );
 }
