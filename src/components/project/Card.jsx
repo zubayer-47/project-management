@@ -1,8 +1,12 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addProject, addProjectModal, setCardModal
+  addProject,
+  addProjectModal,
+  emptyProject,
+  setCardModal
 } from "../../features/modal/modalSlice";
+import { projectApi } from "../../features/projects/projectsApi";
 import { getProject } from "../../features/projects/projectSlice";
 import CardModal from "../CardModal";
 import AddUserModal from "../Team/AddUserModal";
@@ -30,6 +34,8 @@ export default function Card({
 }) {
   const dispatch = useDispatch();
   const { cardModal } = useSelector((state) => state.modal);
+  const { user } = useSelector((state) => state.auth);
+  
   return (
     <>
       <div
@@ -50,6 +56,20 @@ export default function Card({
             }}
             firstTitle="Add User"
             secondTitle="Edit Project"
+            thirdTitle="Delete"
+            handleThird={() => {
+              if (project?.creator === user?.id) {
+                dispatch(addProjectModal(false));
+                setOpen(false);
+                dispatch(
+                  projectApi.endpoints.deleteProject.initiate({
+                    projectId: project.id,
+                    creator: project.creator,
+                  })
+                );
+                dispatch(emptyProject());
+              }
+            }}
           />
         )}
         {isEditable && (

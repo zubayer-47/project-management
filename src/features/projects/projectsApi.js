@@ -56,7 +56,42 @@ export const projectApi = apiSlice.injectEndpoints({
         }
       },
     }),
+
+    deleteProject: builder.mutation({
+      query: ({ projectId, creator }) => ({
+        url: `/projects/${projectId}`,
+        method: "DELETE",
+      }),
+
+      async onQueryStarted(
+        { projectId, creator },
+        { queryFulfilled, dispatch }
+      ) {
+        const patchResult = dispatch(
+          apiSlice.util.updateQueryData("getProjectsByStage", {
+            stage: "backlog",
+            userId: creator,
+          }),
+          (draft) => {
+            return draft.filter((p) => {
+              console.log(p.id == projectId);
+              return p.id == projectId;
+            });
+          }
+        );
+
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          patchResult.undo();
+        }
+      },
+    }),
   }),
 });
 
-export const { useGetProjectsByStageQuery, useUpdateProjectMutation, useCreateProjectMutation } = projectApi;
+export const {
+  useGetProjectsByStageQuery,
+  useUpdateProjectMutation,
+  useCreateProjectMutation,
+} = projectApi;

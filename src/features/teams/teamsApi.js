@@ -8,6 +8,9 @@ export const teamsApi = apiSlice.injectEndpoints({
     getTeam: builder.query({
       query: (teamName) => `/teams?name=${teamName}`
     }),
+    getTeamById: builder.query({
+      query: (id) => `/teams/${id}`
+    }),
     createTeam: builder.mutation({
       query: ({ userId, data }) => ({
         url: "/teams",

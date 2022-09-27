@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addProjectModal } from "../../features/modal/modalSlice";
-import { useCreateProjectMutation, useUpdateProjectMutation } from "../../features/projects/projectsApi";
+import {
+  useCreateProjectMutation,
+  useUpdateProjectMutation
+} from "../../features/projects/projectsApi";
 import { teamsApi } from "../../features/teams/teamsApi";
 import debounce from "../../utils/debounce";
 
@@ -13,27 +16,27 @@ export default function ProjectModal() {
   } = useSelector((state) => state.modal);
   const { user } = useSelector((state) => state.auth);
   const [projectName, setProjectName] = useState(project?.name || "");
-  const [teamName, setTeamName] = useState(project?.teamName || "");
+  const [teamNameS, setTeamNameS] = useState(project?.teamName || "");
   const [description, setDescription] = useState(project?.description || "");
-  const [color, setColor] = useState(project?.color || "");
-  const [teamId, setTeamId] = useState('');
+  const [teamId, setTeamId] = useState("");
   const [teams, setTeams] = useState([]);
+  const [teamName, setTeamName] = useState(project?.teamName || "");
 
   const [updateProject] = useUpdateProjectMutation();
-  const [createProject] = useCreateProjectMutation()
+  const [createProject] = useCreateProjectMutation();
   const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
       try {
         const response = await dispatch(
-          teamsApi.endpoints.getTeam.initiate(teamName)
+          teamsApi.endpoints.getTeam.initiate(teamNameS)
         );
 
         setTeams(response.data);
       } catch (error) {}
     })();
-  }, [teamName, dispatch]);
+  }, [teamNameS, dispatch]);
 
   const control = () => {
     dispatch(addProjectModal(false));
@@ -49,26 +52,39 @@ export default function ProjectModal() {
         data: {
           teamId: project?.teamId,
           name: projectName,
-          color,
+          // color,
           description,
           date: new Date().toDateString(),
         },
       });
     } else if (!project?.id) {
       //   create project
-      
-      // if (teamId) {
-      //   createProject({
-      //     userId: user?.id,
-      //     data: {
-      //       teamId,
-      //       name: projectName,
-      //       members: [user?.id],
-      //       teamName: 
-      //     }
-      //   })
-      // }
+      if (teamId && teamName) {
+        console.log(teamId, teamName);
+        try {
+          const response = await dispatch(
+            teamsApi.endpoints.getTeamById.initiate(teamId)
+          ).unwrap();
+          console.log(response);
 
+          createProject({
+            userId: user?.id,
+            data: {
+              teamId,
+              name: projectName,
+              members: [user?.id],
+              teamName,
+              color: response.color,
+              description,
+              stage: "backlog",
+              creator: user?.id,
+              date: new Date().toDateString(),
+            },
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }
     }
 
     dispatch(addProjectModal(false));
@@ -96,7 +112,7 @@ export default function ProjectModal() {
                       type="text"
                       className="rounded-md focus:outline-none focus:ring border-2 px-2 py-1"
                       id="name"
-                      onChange={debounce((e) => setTeamName(e.target.value))}
+                      onChange={debounce((e) => setTeamNameS(e.target.value))}
                     />
                   </div>
                   <div className="ml-5 pb-5">
@@ -105,7 +121,11 @@ export default function ProjectModal() {
                         <p
                           key={t.id}
                           className="border-2 p-2 w-3/4"
-                          onClick={(e) => setTeamId(t.id)}
+                          onClick={(e) => {
+                            setTeamId(t.id);
+                            setTeamName(t.name);
+                            setTeams([]);
+                          }}
                         >
                           {t.name}
                         </p>
@@ -134,55 +154,6 @@ export default function ProjectModal() {
                   onChange={(e) => setDescription(e.target.value)}
                   className="rounded-md focus:outline-none focus:ring border-2 px-2 py-1"
                 />
-              </div>
-
-              {/* color section */}
-              <div className="flex items-left flex-col pl-4 pr-4 gap-1 py-2">
-                <label htmlFor="color">Color</label>
-                <div className="flex gap-4">
-                  <span
-                    className={`bg-red-400 w-4 h-4 rounded-full ${
-                      color === "red" ? "ring ring-red-300" : ""
-                    } cursor-pointer`}
-                    onClick={(e) => setColor("red")}
-                  ></span>
-                  <span
-                    className={`bg-purple-400 w-4 h-4 rounded-full  ${
-                      color === "purple" ? "ring ring-purple-300" : ""
-                    } cursor-pointer`}
-                    onClick={(e) => setColor("purple")}
-                  ></span>
-                  <span
-                    className={`bg-indigo-400 w-4 h-4 rounded-full ${
-                      color === "indigo" ? "ring ring-indigo-300" : ""
-                    } -indigo-400 cursor-pointer`}
-                    onClick={(e) => setColor("indigo")}
-                  ></span>
-                  <span
-                    className={`bg-orange-400 w-4 h-4 rounded-full ${
-                      color === "orange" ? "ring ring-orange-300" : ""
-                    } cursor-pointer`}
-                    onClick={(e) => setColor("orange")}
-                  ></span>
-                  <span
-                    className={`bg-amber-400 w-4 h-4 rounded-full ${
-                      color === "amber" ? "ring ring-amber-300" : ""
-                    } cursor-pointer`}
-                    onClick={(e) => setColor("amber")}
-                  ></span>
-                  <span
-                    className={`bg-green-400 w-4 h-4 rounded-full ${
-                      color === "green" ? "ring ring-green-300" : ""
-                    } cursor-pointer`}
-                    onClick={(e) => setColor("green")}
-                  ></span>
-                  <span
-                    className={`bg-lime-400 w-4 h-4 rounded-full ${
-                      color === "lime" ? "ring ring-lime-300" : ""
-                    }  cursor-pointer`}
-                    onClick={(e) => setColor("lime")}
-                  ></span>
-                </div>
               </div>
             </div>
 
