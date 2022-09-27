@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { addModal } from "../features/modal/modalSlice";
 import {
   teamsApi,
-  useAddTeamToUserMutation, useUpdateTeamMutation
+  useAddTeamToUserMutation,
+  useUpdateTeamMutation
 } from "../features/teams/teamsApi";
 
 export default function Modal({ open }) {
@@ -15,7 +16,6 @@ export default function Modal({ open }) {
 
   const [updateTeam] = useUpdateTeamMutation();
   const [addTeamToUser] = useAddTeamToUserMutation();
-
   const dispatch = useDispatch();
 
   const control = () => {
@@ -49,8 +49,8 @@ export default function Modal({ open }) {
 
       addTeamToUser({
         userId: user?.id,
-        teams: [...user?.teams, response?.data?.id]
-      })
+        teams: [...user?.teams, response?.data?.id],
+      });
     }
 
     dispatch(addModal(false));

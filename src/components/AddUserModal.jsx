@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setCardModal } from "../features/modal/modalSlice";
+import { addModal, setCardModal } from "../features/modal/modalSlice";
 import {
   teamsApi,
   useAddTeamToUserMutation,
@@ -17,6 +17,10 @@ export default function AddUserModal() {
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(addModal(false));
+  }, [dispatch]);
+
   const handleCheck = debounce((e) => setEmail(e.target.value));
 
   useEffect(() => {
@@ -30,22 +34,21 @@ export default function AddUserModal() {
           (user) => team?.users?.includes(user?.id) === false
         );
 
-        console.log(data);
-
         setUsers(data);
       }
     })();
   }, [email, dispatch, team]);
 
   const control = (e) => {
-    console.log("control");
+    dispatch(setCardModal());
   };
 
   return (
-    <div
-      onClick={control}
-      className="fixed w-full h-full inset-0 z-10 bg-black/10 cursor-pointer"
-    >
+    <>
+      <div
+        onClick={control}
+        className="fixed w-full h-full inset-0 z-10 bg-black/10 cursor-pointer"
+      ></div>
       <div className="rounded w-[400px] lg:w-[600px] space-y-8 bg-white p-10 absolute top-1/2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2">
         <input
           className="ring outline-none w-full rounded px-2 py-1"
@@ -76,6 +79,6 @@ export default function AddUserModal() {
             ))}
         </div>
       </div>
-    </div>
+    </>
   );
 }

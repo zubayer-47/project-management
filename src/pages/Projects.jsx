@@ -1,8 +1,28 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import Nav from "../components/Nav";
 import Project from "../components/project/Project";
+import Error from '../components/ui/Error';
+import { useGetProjectsByStageQuery } from "../features/projects/projectsApi";
 
 export default function Projects() {
+  const { user } = useSelector((state) => state.auth);
+  const { data, isLoading, isError, isSuccess } = useGetProjectsByStageQuery({
+    stage: "backlog",
+    userId: user?.id,
+  });
+
+  let content = null;
+
+  if (isLoading) {
+    content = <div>Loading...</div>
+  } else if (isError) {
+    content = <Error message="There is an Error Occurred" />
+  } else if (isSuccess && data?.length > 0) {
+    
+  }
+
+  console.log(data);
   return (
     <div className="flex flex-col w-screen h-screen overflow-auto text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200">
       <Nav page="projects" />

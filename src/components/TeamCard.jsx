@@ -18,6 +18,7 @@ export default function TeamCard({ team, onClick, open, setOpen }) {
   const { name, description, date, color } = team ?? {};
 
   const { isAddModal, cardModal } = useSelector((state) => state.modal);
+
   const dispatch = useDispatch();
 
   const generatedColor = colors[color];
