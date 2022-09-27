@@ -14,6 +14,7 @@ export const modalSlice = createSlice({
   initialState,
   reducers: {
     addTeamModal(state, action) {
+      console.log(action.payload)
       state.isTeamModalOpen = action.payload;
     },
     addProjectModal(state, action) {

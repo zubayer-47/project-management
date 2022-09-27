@@ -50,9 +50,7 @@ export default function ProjectModal() {
         projectId: project?.id,
         userId: user?.id,
         data: {
-          teamId: project?.teamId,
           name: projectName,
-          // color,
           description,
           date: new Date().toDateString(),
         },

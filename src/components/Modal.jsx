@@ -22,7 +22,13 @@ export default function Modal() {
     dispatch(addTeamModal(false));
   };
 
-  const handleSubmit = async (e) => {
+  const reset = () => {
+    setName("");
+    setDescription("");
+    setColor("");
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (data?.id) {
       updateTeam({
@@ -34,26 +40,33 @@ export default function Modal() {
           date: new Date().toDateString(),
         },
       });
+      dispatch(addTeamModal(false));
+      reset();
     } else if (!data?.id) {
-      const response = await dispatch(
-        teamsApi.endpoints.createTeam.initiate({
-          userId: user?.id,
-          data: {
-            name,
-            description,
-            color,
-            date: new Date().toDateString(),
-          },
-        })
-      );
+      (async () => {
+        try {
+          const { data } = await dispatch(
+            teamsApi.endpoints.createTeam.initiate({
+              userId: user?.id,
+              data: {
+                name,
+                description,
+                color,
+                date: new Date().toDateString(),
+              },
+            })
+          );
 
-      addTeamToUser({
-        userId: user?.id,
-        teams: [...user?.teams, response?.data?.id],
-      });
+          dispatch(addTeamModal(false));
+          reset();
+
+          addTeamToUser({
+            userId: user?.id,
+            teams: [...user?.teams, data?.id],
+          });
+        } catch (error) {}
+      })();
     }
-
-    dispatch(addTeamModal(false));
   };
 
   return (

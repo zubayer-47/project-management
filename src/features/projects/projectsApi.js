@@ -35,18 +35,36 @@ export const projectApi = apiSlice.injectEndpoints({
     }),
 
     updateProject: builder.mutation({
-      query: ({ projectId, data, userId }) => ({
+      query: ({ projectId, data }) => ({
         url: `/projects/${projectId}`,
         method: "PATCH",
         body: data,
       }),
 
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+      async onQueryStarted(
+        { projectId, data },
+        { queryFulfilled, dispatch, getState }
+      ) {
+        const { user } = getState()?.auth;
         const patchResult = dispatch(
-          apiSlice.util.updateQueryData("getProjectsByStage", {
-            stage: "backlog",
-            userId: arg.userId,
-          })
+          apiSlice.util.updateQueryData(
+            "getProjectsByStage",
+            {
+              stage: "backlog",
+              userId: user.id,
+            },
+            (draft) => {
+              const oldProject = draft.find(
+                (project) => project.id == projectId
+              );
+
+              if (oldProject?.id) {
+                oldProject.name = data?.name;
+                oldProject.description = data?.description;
+                oldProject.date = data?.date;
+              }
+            }
+          )
         );
 
         try {
