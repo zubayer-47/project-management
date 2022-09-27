@@ -48,7 +48,6 @@ export default function ProjectModal() {
       // update project
       updateProject({
         projectId: project?.id,
-        userId: user?.id,
         data: {
           name: projectName,
           description,
@@ -58,7 +57,6 @@ export default function ProjectModal() {
     } else if (!project?.id) {
       //   create project
       if (teamId && teamName) {
-        console.log(teamId, teamName);
         try {
           const response = await dispatch(
             teamsApi.endpoints.getTeamById.initiate(teamId)
@@ -66,18 +64,15 @@ export default function ProjectModal() {
           console.log(response);
 
           createProject({
-            userId: user?.id,
-            data: {
-              teamId,
-              name: projectName,
-              members: [user?.id],
-              teamName,
-              color: response.color,
-              description,
-              stage: "backlog",
-              creator: user?.id,
-              date: new Date().toDateString(),
-            },
+            teamId,
+            name: projectName,
+            members: [user?.id],
+            teamName,
+            color: response.color,
+            description,
+            stage: "backlog",
+            creator: user?.id,
+            date: new Date().toDateString(),
           });
         } catch (error) {
           console.log(error);
