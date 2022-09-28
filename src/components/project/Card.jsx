@@ -6,7 +6,7 @@ import {
   emptyProject,
   setCardModal
 } from "../../features/modal/modalSlice";
-import { projectApi } from "../../features/projects/projectsApi";
+import { useDeleteProjectMutation } from "../../features/projects/projectsApi";
 import { getProject } from "../../features/projects/projectSlice";
 import CardModal from "../CardModal";
 import AddUserModal from "../Team/AddUserModal";
@@ -37,6 +37,8 @@ export default function Card({
   const dispatch = useDispatch();
   const { cardModal } = useSelector((state) => state.modal);
   const { user } = useSelector((state) => state.auth);
+
+  const [deleteProject] = useDeleteProjectMutation();
 
   useEffect(() => {
     if (description.includes(searchTerm) && searchTerm.length > 0) {
@@ -69,13 +71,18 @@ export default function Card({
             secondTitle="Edit Project"
             thirdTitle="Delete"
             handleThird={() => {
+              console.log("outside");
               if (project?.creator === user?.id) {
-                dispatch(
-                  projectApi.endpoints.deleteProject.initiate(project.id)
-                );
-                dispatch(addProjectModal(false));
+                console.log("inside");
                 setOpen(false);
                 dispatch(emptyProject());
+                deleteProject(project.id);
+                dispatch(addProjectModal(false));
+              } else {
+                setOpen(false);
+                dispatch(emptyProject());
+                dispatch(addProjectModal(false));
+                alert("You are Not Project Creator which you want to delete");
               }
             }}
           />

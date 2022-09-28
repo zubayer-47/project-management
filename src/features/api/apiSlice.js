@@ -22,9 +22,8 @@ export const apiSlice = createApi({
       if (result?.error?.status === 401) {
         api.dispatch(logout());
         localStorage.clear();
-      } else {
-        return result;
       }
+      return result;
     } catch (error) {
       console.log(error);
     }

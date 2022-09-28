@@ -7,10 +7,8 @@ import Card from "../Card";
 export default function Blocked() {
   const { user } = useSelector((state) => state.auth);
 
-  const { data, isLoading, isError, isSuccess } = useGetProjectsByStageQuery({
-    stage: "blocked",
-    userId: user?.id,
-  });
+  const { data, isLoading, isError, isSuccess } =
+    useGetProjectsByStageQuery("blocked");
 
   let content = null;
 
@@ -42,9 +40,7 @@ export default function Blocked() {
           {data?.length || 0}
         </span>
       </div>
-      <div className="flex flex-col pb-2 overflow-auto">
-        {content}
-      </div>
+      <div className="flex flex-col pb-2 overflow-auto">{content}</div>
     </div>
   );
 }

@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addProjectModal, emptyProject } from "../../../features/modal/modalSlice";
+import { useDispatch } from "react-redux";
+import {
+  addProjectModal,
+  emptyProject
+} from "../../../features/modal/modalSlice";
 import { useGetProjectsByStageQuery } from "../../../features/projects/projectsApi";
 import Error from "../../ui/Error";
 import Card from "../Card";
@@ -8,15 +11,10 @@ import Card from "../Card";
 export default function Backlog() {
   const [modalId, setModalId] = useState("");
   const [cardModalOpen, setCardModalOpen] = useState(false);
-
-  const { user } = useSelector((state) => state.auth);
-
   const dispatch = useDispatch();
 
-  const { data, isLoading, isError, isSuccess } = useGetProjectsByStageQuery({
-    stage: "backlog",
-    userId: user?.id,
-  });
+  const { data, isLoading, isError, isSuccess } =
+    useGetProjectsByStageQuery("backlog");
 
   let content = null;
 
@@ -37,9 +35,10 @@ export default function Backlog() {
           color={project.color}
           date={project.date}
           isEditable
-
           onClick={() => {
-            setModalId((prevState) => (prevState === project?.id ? "" : project?.id));
+            setModalId((prevState) =>
+              prevState === project?.id ? "" : project?.id
+            );
             setCardModalOpen((prevState) =>
               prevState === project?.id ? false : true
             );
