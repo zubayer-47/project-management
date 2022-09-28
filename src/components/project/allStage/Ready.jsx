@@ -1,16 +1,10 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { useGetProjectsByStageQuery } from "../../../features/projects/projectsApi";
 import Error from "../../ui/Error";
 import Card from "../Card";
 
 export default function Ready() {
-  const { user } = useSelector((state) => state.auth);
-
-  const { data, isLoading, isError, isSuccess } = useGetProjectsByStageQuery({
-    stage: "ready",
-    userId: user?.id,
-  });
+  const { data, isLoading, isError, isSuccess } = useGetProjectsByStageQuery("ready");
 
   let content = null;
 

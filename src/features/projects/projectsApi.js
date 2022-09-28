@@ -3,7 +3,10 @@ import { apiSlice } from "../api/apiSlice";
 export const projectApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProjectsByStage: builder.query({
-      query: ({ stage }) => `/projects?stage=${stage}`,
+      query: (stage) => {
+        console.log(stage);
+        return `/projects?stage_like=${stage}`;
+      },
     }),
 
     createProject: builder.mutation({
@@ -16,13 +19,12 @@ export const projectApi = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
           const response = await queryFulfilled;
-
           dispatch(
             apiSlice.util.updateQueryData(
               "getProjectsByStage",
-              { stage: "backlog" },
-              (draft) => {
-                draft.push(response.data);
+              "backlog",
+              (draftProjects) => {
+                draftProjects.push(response.data);
               }
             )
           );
@@ -41,9 +43,7 @@ export const projectApi = apiSlice.injectEndpoints({
         const patchResult = dispatch(
           apiSlice.util.updateQueryData(
             "getProjectsByStage",
-            {
-              stage: "backlog",
-            },
+            "backlog",
             (draft) => {
               const oldProject = draft.find(
                 (project) => project.id == projectId
@@ -74,15 +74,13 @@ export const projectApi = apiSlice.injectEndpoints({
 
       async onQueryStarted(projectId, { queryFulfilled, dispatch }) {
         const patchResult = dispatch(
-          apiSlice.util.updateQueryData("getProjectsByStage", {
-            stage: "backlog",
-          }),
-          (draft) => {
-            return draft.filter((p) => {
-              console.log(p.id == projectId);
-              return p.id == projectId;
-            });
-          }
+          apiSlice.util.updateQueryData(
+            "getProjectsByStage",
+            { stage: "backlog" },
+            (draft) => {
+              return draft.filter((p) => p.id != projectId);
+            }
+          )
         );
 
         try {
@@ -99,4 +97,5 @@ export const {
   useGetProjectsByStageQuery,
   useUpdateProjectMutation,
   useCreateProjectMutation,
+  useDeleteProjectMutation,
 } = projectApi;

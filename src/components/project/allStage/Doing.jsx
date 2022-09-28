@@ -7,10 +7,7 @@ import Card from "../Card";
 export default function Doing() {
   const { user } = useSelector((state) => state.auth);
 
-  const { data, isLoading, isError, isSuccess } = useGetProjectsByStageQuery({
-    stage: "doing",
-    userId: user?.id,
-  });
+  const { data, isLoading, isError, isSuccess } = useGetProjectsByStageQuery("doing");
 
   let content = null;
 

@@ -61,7 +61,6 @@ export default function ProjectModal() {
           const response = await dispatch(
             teamsApi.endpoints.getTeamById.initiate(teamId)
           ).unwrap();
-          console.log(response);
 
           createProject({
             teamId,
