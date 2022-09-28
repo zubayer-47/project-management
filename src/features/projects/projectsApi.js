@@ -4,7 +4,6 @@ export const projectApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProjectsByStage: builder.query({
       query: (stage) => {
-        console.log(stage);
         return `/projects?stage_like=${stage}`;
       },
     }),
@@ -73,10 +72,11 @@ export const projectApi = apiSlice.injectEndpoints({
       }),
 
       async onQueryStarted(projectId, { queryFulfilled, dispatch }) {
+        console.log("rendering");
         const patchResult = dispatch(
           apiSlice.util.updateQueryData(
             "getProjectsByStage",
-            { stage: "backlog" },
+            "backlog",
             (draft) => {
               return draft.filter((p) => p.id != projectId);
             }

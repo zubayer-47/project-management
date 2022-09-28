@@ -1,15 +1,20 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDrop } from "react-dnd";
 import { useGetProjectsByStageQuery } from "../../../features/projects/projectsApi";
 import Error from "../../ui/Error";
 import Card from "../Card";
 
 export default function Blocked() {
-  const { user } = useSelector((state) => state.auth);
-
   const { data, isLoading, isError, isSuccess } =
     useGetProjectsByStageQuery("blocked");
 
+  const [{ item, isOver }, drop] = useDrop(() => ({
+    accept: "stages",
+    collect: (monitor) => ({
+      isOver: monitor.canDrop(),
+      item: monitor.getItem(),
+    }),
+  }));
   let content = null;
 
   if (isLoading) {
@@ -40,7 +45,7 @@ export default function Blocked() {
           {data?.length || 0}
         </span>
       </div>
-      <div className="flex flex-col pb-2 overflow-auto">{content}</div>
+      <div className="flex flex-col pb-2 overflow-auto" ref={drop}>{content}</div>
     </div>
   );
 }
