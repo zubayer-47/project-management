@@ -10,7 +10,7 @@ import {
 import { useDeleteProjectMutation } from "../../features/projects/projectsApi";
 import { getProject } from "../../features/projects/projectSlice";
 import CardModal from "../CardModal";
-import AddUserModal from "../Team/AddUserModal";
+import AddUserToProjectModal from "./AddUserToProjectModal";
 
 const colors = {
   purple: `text-purple-500 bg-purple-100`,
@@ -69,9 +69,9 @@ export default function Card({
         {open && (
           <CardModal
             handleFirst={() => {
+              dispatch(getProject({ ...project }));
               setOpen(false);
               dispatch(setCardModal());
-              dispatch(getProject({ ...project }));
             }}
             handleSecond={() => {
               dispatch(addProjectModal(true));
@@ -137,7 +137,7 @@ export default function Card({
           />
         </div>
       </div>
-      {cardModal && <AddUserModal />}
+      {cardModal && <AddUserToProjectModal />}
     </>
   );
 }

@@ -8,6 +8,29 @@ export const projectApi = apiSlice.injectEndpoints({
       },
     }),
 
+    getProject: builder.query({
+      query: (projectId) => `/projects/${projectId}`,
+    }),
+
+    getMembersById: builder.query({
+      query: (members) => {
+        if (members.length > 0) {
+          const queryString = members.reduce(
+            (prev, curr) => (prev += `&id=${curr}`),
+            ""
+          );
+
+          return {
+            url: `/users?${queryString}`,
+          };
+        }
+      },
+    }),
+
+    getUserByEmail: builder.query({
+      query: email => `/users?email_like=${email}`
+    }),
+
     createProject: builder.mutation({
       query: (data) => ({
         url: "/projects",
@@ -95,6 +118,9 @@ export const projectApi = apiSlice.injectEndpoints({
 
 export const {
   useGetProjectsByStageQuery,
+  useGetProjectQuery,
+  useGetUserByEmailQuery,
+  useGetMembersByIdQuery,
   useUpdateProjectMutation,
   useCreateProjectMutation,
   useDeleteProjectMutation,
