@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useDrag } from "react-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addProject,
@@ -40,6 +41,14 @@ export default function Card({
 
   const [deleteProject] = useDeleteProjectMutation();
 
+  const [{ isDraggable }, drag] = useDrag(() => ({
+    type: "stages",
+    item: { project },
+    collect: (monitor) => ({
+      isDraggable: monitor.isDragging(),
+    }),
+  }));
+
   useEffect(() => {
     if (description.includes(searchTerm) && searchTerm.length > 0) {
       setIsSearchMatch(true);
@@ -47,9 +56,11 @@ export default function Card({
       setIsSearchMatch(false);
     }
   }, [description, searchTerm]);
+
   return (
     <>
       <div
+        ref={drag}
         className={`relative flex flex-col items-start p-4 mt-1 bg-white ${
           isSearchMatch ? "ring-4" : "ring-0"
         } rounded-lg cursor-pointer bg-opacity-90 group hover:bg-opacity-100 m-2`}
@@ -71,20 +82,12 @@ export default function Card({
             secondTitle="Edit Project"
             thirdTitle="Delete"
             handleThird={() => {
-              console.log("outside");
-              if (project?.creator === user?.id) {
-                console.log("inside");
-                setOpen(false);
-                dispatch(emptyProject());
-                deleteProject(project.id);
-                dispatch(addProjectModal(false));
-              } else {
-                setOpen(false);
-                dispatch(emptyProject());
-                dispatch(addProjectModal(false));
-                alert("You are Not Project Creator which you want to delete");
-              }
+              deleteProject(project.id);
+              setOpen(false);
+              dispatch(emptyProject());
+              dispatch(addProjectModal(false));
             }}
+            canDelete={project?.creator === user?.id}
           />
         )}
         {isEditable && (

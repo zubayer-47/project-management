@@ -21,21 +21,24 @@ export default function ProjectModal() {
   const [teamId, setTeamId] = useState("");
   const [teams, setTeams] = useState([]);
   const [teamName, setTeamName] = useState(project?.teamName || "");
+  const [disabled, setDisabled] = useState(false);
 
   const [updateProject] = useUpdateProjectMutation();
   const [createProject] = useCreateProjectMutation();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    (async () => {
-      try {
-        const response = await dispatch(
-          teamsApi.endpoints.getTeam.initiate(teamNameS)
-        );
+    if (teamNameS) {
+      (async () => {
+        try {
+          const response = await dispatch(
+            teamsApi.endpoints.getTeam.initiate(teamNameS)
+          );
 
-        setTeams(response.data);
-      } catch (error) {}
-    })();
+          setTeams(response.data);
+        } catch (error) {}
+      })();
+    }
   }, [teamNameS, dispatch]);
 
   const control = () => {
@@ -54,6 +57,8 @@ export default function ProjectModal() {
           date: new Date().toDateString(),
         },
       });
+
+      setDisabled(true);
     } else if (!project?.id) {
       //   create project
       if (teamId && teamName) {
@@ -76,6 +81,8 @@ export default function ProjectModal() {
         } catch (error) {
           console.log(error);
         }
+
+        setDisabled(true);
       }
     }
 
@@ -151,6 +158,7 @@ export default function ProjectModal() {
 
             <div>
               <button
+                disabled={disabled}
                 type="submit"
                 className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500`}
               >

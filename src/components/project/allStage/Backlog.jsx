@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDrop } from "react-dnd";
 import { useDispatch } from "react-redux";
 import {
   addProjectModal,
@@ -15,6 +16,18 @@ export default function Backlog() {
 
   const { data, isLoading, isError, isSuccess } =
     useGetProjectsByStageQuery("backlog");
+
+  const [{ item, isOver }, drop] = useDrop(() => ({
+    accept: "stages",
+    collect: (monitor) => ({
+      isOver: monitor.canDrop(),
+      item: monitor.getItem(),
+    }),
+  }));
+
+  // useEffect(() => {
+  //   if (item)
+  // }, [item])
 
   let content = null;
 
@@ -79,7 +92,9 @@ export default function Backlog() {
           </svg>
         </button>
       </div>
-      <div className="flex flex-col pb-2 overflow-auto">{content}</div>
+      <div className={`flex flex-col pb-2 overflow-auto`} ref={drop}>
+        {content}
+      </div>
     </div>
   );
 }
