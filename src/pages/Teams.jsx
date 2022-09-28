@@ -20,11 +20,11 @@ export default function Teams() {
   };
 
   let content = null;
-  if (isLoading && !isError) {
+  if (isLoading) {
     content = <div>Loading...</div>;
   } else if (!isLoading && isError) {
     content = <Error message="There was a problem" />;
-  } else if (isSuccess && !isLoading && !isError) {
+  } else if (isSuccess && !isLoading) {
     content = data.map((team) => (
       <TeamCard
         key={team.id}
